@@ -87,8 +87,25 @@ void mostrar(tipo_no *raiz) {
 	mostrar(raiz->dir);
 }
 
-void pesquisar() {
-	
+void pesquisar(int codPesq, tipo_no *raiz) {
+	if(!raiz) {
+		printf("\n\n O item de código %d não está na árvore", codPesq);
+		return;
+	}
+
+	if(codPesq < raiz->item.cod){
+		pesquisar(codPesq, raiz->esq);
+		return;
+	}
+	if(codPesq > raiz->item.cod){
+		pesquisar(codPesq, raiz->dir);
+	} else {
+		printf("\n\n***** ITEM ENCONTRADO *****");
+		printf("\n Cod: %d", raiz->item.cod);	
+		printf("\n Nome: %s", raiz->item.nome);
+		printf("\n Quantidade: %d \n", raiz->item.quant);
+	}
+
 }
 
 void excluir() {
@@ -150,7 +167,7 @@ int main() {
 				else 
 					inserir(aux, raiz, raiz);
 				break;
-			case 2: 
+			case 2:  
 				if(!raiz) {
 					printf("\nÁrvore vazia! Insira uma item primeiro.");
 					getch();
