@@ -108,12 +108,48 @@ void pesquisar(int codPesq, tipo_no *raiz) {
 
 }
 
-void excluir() {
+tipo_no* excluir(int *achou, int codExcluir, tipo_no *raiz) {
+	if(!raiz) {
+		return raiz;
+	}
+	
+	tipo_no *p1, *p2;
+	if(raiz->item.cod == codExcluir) { // quando encontra o código de fato e apagar a raiz(ou a folha nó)
+		*achou = 1;
+		
+		if(raiz->esq == raiz->dir) { //se eles são nulos, ou seja, é um nó folha
+			free(raiz);
+			return NULL;
+		} else if(raiz->esq == NULL) {
+			p1 = raiz->dir;
+			free(raiz);
+			return p1;
+		} else {
+			//vai para a raiz da subárvore direita
+			p1 = raiz->dir;
+			p2 = raiz->dir;
+			
+			//navega até o último nó mais a esquerda
+			while(p1->esq) {
+				p1 = p1->esq;
+			}
+			
+			//essa folha vai ser a nova raiz
+			p1->esq = raiz->esq;
+			free(raiz);
+			
+			return p2;
+		}
+	}
+	
+	if(raiz->item.cod < codExcluir){
+		raiz->dir = excluir(achou, codExcluir, raiz->dir);
+	} else {
+		raiz->esq = excluir(achou, codExcluir, raiz->esq);	
+	}
+	return raiz;
 }
 
-void mostrarItem() {
-	
-}
 
 int menu() {
 	int op = 0;
@@ -122,9 +158,8 @@ int menu() {
 		printf("\n\n ********** MENU **********");
 		printf("\n [1] - INSERIR");
 		printf("\n [2] - MOSTRAR");
-		printf("\n [3] - ");
-		printf("\n [4] - ");
-		printf("\n [5] - ");
+		printf("\n [3] - PESQUISAR");
+		printf("\n [4] - EXCLUIR");
 		printf("\n [0] - SAIR");
 		
 		printf("\n\n Opção: ");
@@ -173,27 +208,29 @@ int main() {
 					getch();
 					break;
 				}
-				printf("\n\n\CONTEÚDO DA ÁRVORE: ");
+				printf("\n\nCONTEÚDO DA ÁRVORE: ");
 				mostrar(raiz);
 				getch();
 				break;
 			case 3: 
-				printf("\n\n\PESQUISA DA ÁRVORE ");
+				printf("\n\nPESQUISA DA ÁRVORE ");
 				printf("\n\n\Digite o código do item a pesquisar: ");
 				scanf("%d", &cod);
 				achou = 0;
-				//pesquisar(&achou, cod, raiz);
+				pesquisar(cod, raiz);
 				if(!achou) {
 					printf("\n\nO item de código %d não está na árvore", cod);
-				}
+				} else {
+	    				printf("\n\n O item de código %d foi excluído com sucesso !!!", cod);	
+					}
 				getch();
 				break;
 			case 4: 
-				printf("\n\n\EXCLUIR DA ÁRVORE ");
+				printf("\n\nEXCLUIR DA ÁRVORE ");
 				printf("\n\n\Digite o código do item a excluir: ");
 				scanf("%d", &cod);
 				achou = 0;
-				//raiz = excluir(&achou, cod, raiz);
+				raiz = excluir(&achou, cod, raiz);
 				if(!achou) {
 					printf("\n\nO item de código %d não está na árvore", cod);
 				}
