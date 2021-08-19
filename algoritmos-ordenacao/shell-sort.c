@@ -7,7 +7,9 @@ void inserir(int *vet, int tam){
 	int i = 0;
 	
 	for(i;i < tam; i++){
-		vet[i] = rand() % 100 + 1;
+		//printf("\nDigite o %do número:", i+1);
+		//scanf("%d", &vet[i]);
+		vet[i] = rand() % 100;
 	}
 }
 
@@ -27,31 +29,34 @@ void mostrar(int *vet, int tam){
 	
 }
 
-void selectionSort(int *vet, int tam){
-	int aux = 0, i = 0, j = 0, indice_menor = 0;
+void shellSort(int *vet, int tam){
+	int i = 1, j = 0, aux = 0, gap = 1;
 	
-	for (; i < tam-1; i++) {
-		indice_menor = i;
-		for(j = i+1; j < tam; j++){
-			if(vet[j] < vet[indice_menor]) {
-				indice_menor = j;
+	for(; gap < tam; gap=3*gap+1); //calcula o maior gap que este vetor pode ter
+	while (gap > 0) {
+		gap = (gap-1)/3;
+		
+		for(i = gap; i < tam; i++) {
+			aux= vet[i];
+			j = i;
+			while(vet[j-gap] > aux) {
+				vet[j] = vet[j-gap];
+				j = j-gap;
+				if(j < gap){
+					break;
+				}
 			}
+			vet[j] = aux;
 		}
-		if(indice_menor != i) {
-			aux = vet[i]; ;
-			vet[i] = vet[indice_menor];
-			vet[indice_menor] = aux;			
-		}
-		mostrar(vet, tam);
 	}
- }
+}
 
 int main() {
 	setlocale(LC_ALL, "");
 	
 	int *vet, tam;
 	
-	printf("\n\nDigite o tamanho do vetor: ");
+	printf("\n\nDigite o tamanho do vetor:");
 	scanf("%d", &tam);
 	
 	vet = (int *) malloc(sizeof(int));
@@ -61,7 +66,7 @@ int main() {
 	printf("\n\nVetor original:");
 	mostrar(vet, tam);
 	
-	selectionSort(vet, tam);
+	shellSort(vet, tam);
 	
 	printf("\n\nVetor ordenado:");
 	mostrar(vet, tam);

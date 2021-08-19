@@ -16,7 +16,7 @@ void inserir(int *vet, int tam){
 void mostrar(int *vet, int tam){
 	int i = 0;
 
-	printf("\n\n[");
+	printf("\n[");
 	for(i;i < tam; i++){
 		if (i == tam-1) {
 			printf("%d", vet[i]);
@@ -30,11 +30,17 @@ void mostrar(int *vet, int tam){
 }
 
 void insertionSort(int *vet, int tam){
-	int i = 0, j = 1, aux = 0;
+	int i = 1, j = 0, aux = 0;
 	
 	for (; i < tam; i++) {
-		
-	}
+		aux = vet[i];
+		j = i - 1;
+		while(j >= 0 && aux < vet[j]) {
+			vet[j+1] = vet[j];
+			j--;	
+		}
+		vet[j+1] = aux;
+	}		
 }
 
 int main() {
