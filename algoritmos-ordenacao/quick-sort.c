@@ -2,14 +2,15 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <conio.h>
+#include<time.h>
 
 void inserir(int *vet, int tam){
 	int i = 0;
+
+	srand(time(NULL));
 	
 	for(i;i < tam; i++){
-		//printf("\nDigite o %do número:", i+1);
-		//scanf("%d", &vet[i]);
-		vet[i] = rand() % 100;
+		vet[i] = rand() % tam;
 	}
 }
 
@@ -25,30 +26,31 @@ void mostrar(int *vet, int tam){
 		}
 	}
 	printf("]");
-
-	
 }
 
-void shellSort(int *vet, int tam){
-	int i = 1, j = 0, aux = 0, gap = 1;
+void quickSort(int *vet, int esq, int dir) {
+	register int i, j;
+	int pivot, aux;
+	i = esq;
+	j = dir;
+	pivot = vet[(esq + dir)/2];
 	
-	for(; gap < tam; gap=3*gap+1); //calcula o maior gap que este vetor pode ter
-	while (gap > 0) {
-		gap = (gap-1)/3;
-		
-		for(i = gap; i < tam; i++) {
-			aux= vet[i];
-			j = i;
-			while(vet[j-gap] > aux) {
-				vet[j] = vet[j-gap];
-				j = j-gap;
-				if(j < gap){
-					break;
-				}
-			}
+	do {
+		while (vet[i] < pivot && i < dir) i++;
+		while (pivot < vet[j] && j > esq) j--;
+		if (i <= j) {
+			aux = vet[i];
+			vet[i] = vet[j];
 			vet[j] = aux;
+			i++;
+			j--;
 		}
-	}
+	} while(i <= j);
+	
+	if(esq < j)
+		quickSort(vet, esq, j);
+	if(i < dir)
+		quickSort(vet, i, dir);
 }
 
 int main() {
@@ -56,7 +58,7 @@ int main() {
 	
 	int *vet, tam;
 	
-	printf("\n\nDigite o tamanho do vetor:");
+	printf("\n\nDigite o tamanho do vetor: ");
 	scanf("%d", &tam);
 	
 	vet = (int *) malloc(tam*sizeof(int));
@@ -66,10 +68,12 @@ int main() {
 	printf("\n\nVetor original:");
 	mostrar(vet, tam);
 	
-	shellSort(vet, tam);
+	quickSort(vet, 0, tam-1);
 	
 	printf("\n\nVetor ordenado:");
 	mostrar(vet, tam);
 	
 	return 0;
 }
+
+
