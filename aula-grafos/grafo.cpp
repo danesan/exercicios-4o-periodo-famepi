@@ -79,11 +79,22 @@ void pegarVertices(int *vi, int *vf){
 	*vf = v2;
 }
 
-void inserirAresta(tipoGrafo *grafo, int vi, int vf, int v) {
-	printf("\n\n ARESTAS %d - %d", vi, vf);
-	
-	if(vi >= v || vf >= v){
-		printf("\n\n NÃO É POSSÍVEL ADICIONAR ESSE VÉRTICES %d - %d INSERIDA COM SUCESSO!", vi, vf);
+int verticesOk(int vi, int vf, int v) {
+	if(vi < 0 || vi >= v){
+		printf("\n\n VÉRTICE %d INVÁLIDO!", vi);
+		return 0;
+	}
+	if(vf < 0 || vf >= v){
+		printf("\n\n VÉRTICE %d INVÁLIDO!", vf);	
+		return 0;
+	}
+	return 1;
+}
+
+void inserirAresta(tipoGrafo *grafo, int vi, int vf, int v) {	
+	if(!verticesOk(vi, vf, v)){
+		printf("\n NÃO É POSSÍVEL ADICIONAR ESSE VÉRTICES %d - %d", vi, vf);
+		return;
 	} else if(vi != vf && grafo->Adj[vi][vf] == 0) {
 		grafo->Adj[vi][vf] = 1;
 		grafo->Adj[vf][vi] = 1;
@@ -92,7 +103,33 @@ void inserirAresta(tipoGrafo *grafo, int vi, int vf, int v) {
 	} else {
 		printf("\n\n ARESTA %d - %d JÁ EXISTE!", vi, vf);
 	}
-	getch();
+}
+
+void exibeMatriz (tipoGrafo *grafo) {
+	int i = 0, j =0;
+	
+	for(i=0;i < grafo->totalV; i++) {
+		for(j=0;j < grafo->totalV; j++){
+			printf("%d ", grafo->Adj[i][j]);			
+		}
+		printf("\n");
+	}
+}
+
+void mostrarGrafo(tipoGrafo *grafo) {
+	int i = 0, j = 0;
+	
+	exibeMatriz(grafo);
+	
+	printf("\n\n GRAFO COM MATRIZ DE ADJACÊNCIA COM %d VÉRTICES\n", grafo->totalV);
+	for(i=0; i < grafo->totalV;i++) {
+		printf("\n%2d:",i);
+		for(j=0; j < grafo->totalV;j++) {
+			if(grafo->Adj[i][j]) {
+				printf("%2d ", j);
+			}
+		}
+	}
 }
 
 int main() {
@@ -128,6 +165,15 @@ int main() {
 					pegarVertices(&vi, &vf);
 					inserirAresta(grafo, vi, vf, v);
 				}
+				getch();
+				break;
+			case 4: 
+				if(!grafo) {
+					printf("\n\n ERRO! AINDA NÃO EXISTE GRAFO ALOCADO!");
+				} else {
+					mostrarGrafo(grafo);
+				}
+				getch();
 				break;
 		}
 	}
